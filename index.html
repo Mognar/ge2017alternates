@@ -37,9 +37,9 @@
 var width = "400",
     height = "600";
 	
-  var color = d3.scale.threshold()
-   .domain([30, 60, 90, 120, 150, 180, 210])
-    .range(["#f2f0f7", "#dadaeb", "#bcbddc", "#9e9ac8", "#756bb1", "#54278f", "#220c3f", "#100026"]);
+  var color = d3.scale.linear()
+   .domain(["Lab","Con","SNP","PC","LD","DUP","SF","Green","Spk","Ind"])
+    .range(["#f2f0f7", "#dadaeb", "#bcbddc", "#9e9ac8", "#756bb1", "#54278f", "#220c3f", "#100026", "#220c3f", "#100026"]);
   
 //Map projection
 var projection = d3.geo.mercator()
@@ -68,21 +68,15 @@ var tooltip = d3.select("body").append("div").attr("class","tooltip");
   if (error) return console.log(error); //unknown error, check the console*/
   queue()
     .defer(d3.json, "topo.json")
-    .defer(d3.csv, "mpgeo1.csv")
+    .defer(d3.csv, "HoC-GE2017-constituency-results.csv")
     .await(ready);
   
   
   function ready(error, topojsonwpc, mpgeo) {
   if (error) throw error;
     
-    var rateByNumber = {};
-    var nameById = {};
-    var numberById = {};
-     var notesById = {};
-  mpgeo.forEach(function(d) { rateByNumber[d.id] = +d.Number;
-                            nameById[d.id] = d.MP;
-                            numberById[d.id] = d.Number;
-                            notesById[d.id] = d.Further;});
+    var concolor = {}
+  mpgeo.forEach(function(d) { concolor[d.ons_id] = d.first_party});
     
   //Create a path for each map feature in the data
   features.selectAll("path")
@@ -94,13 +88,13 @@ var tooltip = d3.select("body").append("div").attr("class","tooltip");
     .on("mousemove",moveTooltip)
     .on("mouseout",hideTooltip)
     .on("click",clicked)
-    .style("fill", function(d) { return color(rateByNumber[d.id]);
+    .style("fill", function(d) { return color(concolor[d.ons_id]);
 	});			
     
     //Position of the tooltip relative to the cursor
 var tooltipOffset = {x: 5, y: -25};
 //Create a tooltip, hidden at the start
-function showTooltip(d) {
+/*function showTooltip(d) {
   moveTooltip();
   tooltip.style("display","block")
       .html(d.properties.PCON13NM + "<br/>" + "MP: " + nameById[d.id] + "<br/>" + "No. of debates spoken in:" + numberById[d.id] + "<br/>" + "Further information: " + notesById[d.id]);
@@ -113,7 +107,7 @@ function moveTooltip() {
 //Create a tooltip, hidden at the start
 function hideTooltip() {
   tooltip.style("display","none");
-}
+}*/
     
   }
 // Add optional onClick events for features here
