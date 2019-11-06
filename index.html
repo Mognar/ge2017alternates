@@ -90,7 +90,7 @@ var tooltip = d3.select("body").append("div").attr("class","tooltip");
     .on("mousemove",moveTooltip)
     .on("mouseout",hideTooltip)
     .on("click",clicked)
-    .style("fill", function(d) { return color(concolor[d.ons_id]);
+    .style("fill", function(d) { return color(concolor[d.id]);
 	});			
     
     //Position of the tooltip relative to the cursor
