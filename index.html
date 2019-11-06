@@ -76,7 +76,9 @@ var tooltip = d3.select("body").append("div").attr("class","tooltip");
   if (error) throw error;
     
     var concolor = {}
-  mpgeo.forEach(function(d) { concolor[d.ons_id] = d.first_party});
+    var conname = {}
+  mpgeo.forEach(function(d) { concolor[d.id] = d.first_party;
+			    conname[d.id] = d.constituency_name;});
     
   //Create a path for each map feature in the data
   features.selectAll("path")
@@ -97,7 +99,7 @@ var tooltipOffset = {x: 5, y: -25};
 function showTooltip(d) {
   moveTooltip();
   tooltip.style("display","block")
-      .html(d.constituency_name);
+      .html(conname[d.id]);
 }
 //Move the tooltip to track the mouse
 function moveTooltip() {
