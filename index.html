@@ -94,10 +94,10 @@ var tooltip = d3.select("body").append("div").attr("class","tooltip");
     //Position of the tooltip relative to the cursor
 var tooltipOffset = {x: 5, y: -25};
 //Create a tooltip, hidden at the start
-/*function showTooltip(d) {
+function showTooltip(d) {
   moveTooltip();
   tooltip.style("display","block")
-      .html(d.properties.PCON13NM + "<br/>" + "MP: " + nameById[d.id] + "<br/>" + "No. of debates spoken in:" + numberById[d.id] + "<br/>" + "Further information: " + notesById[d.id]);
+      .html(d.constituency_name);
 }
 //Move the tooltip to track the mouse
 function moveTooltip() {
@@ -107,7 +107,7 @@ function moveTooltip() {
 //Create a tooltip, hidden at the start
 function hideTooltip() {
   tooltip.style("display","none");
-}*/
+}
     
   }
 // Add optional onClick events for features here
