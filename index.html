@@ -3,14 +3,14 @@
 	<meta name="viewport" content="width=device-width">
 
 	<meta charset="UTF-8">
-	
+
 	<title>Resolution Dependent Layout</title>
-	
-	<link rel="stylesheet" type="text/css" href="css/style.css">
-	
-	 <link rel="stylesheet" media="screen and (max-width: 700px)" href="css/narrow.css">
-	 <link rel="stylesheet" media="screen and (min-width: 701px)" href="css/wide.css">
-	
+
+
+
+	 <link rel="stylesheet" media="screen and (max-width: 700px)" href="https://raw.githubusercontent.com/Mognar/ge2017alternates/master/css/narrow.css">
+	 <link rel="stylesheet" media="screen and (min-width: 701px)" href="https://raw.githubusercontent.com/Mognar/ge2017alternates/master/css/wide.css">
+
 </head>
 <meta charset="utf-8">
 <body>
@@ -20,7 +20,7 @@
     Please note, this number does not include appearances in committees. <br/><br/>
     If a Member made several contributions in one debate, that debate is still only counted once. <br/>
     If a Member asked a topical and an oral question in the same question time session, this map counts those two questions as one debate.<br/><br/>
-    Constituencies highlighted in green are seats of MPs who did not debate in this Parliament. This will either be because they were <a href="http://www.parliament.uk/business/commons/the-speaker/the-role-of-the-speaker/role-of-the-speaker/">Speakers</a> or 
+    Constituencies highlighted in green are seats of MPs who did not debate in this Parliament. This will either be because they were <a href="http://www.parliament.uk/business/commons/the-speaker/the-role-of-the-speaker/role-of-the-speaker/">Speakers</a> or
     Government Whips, neither of which take part in debates in the typical sense. Members who became whips part way through the Parliament and therefore did take part in debates this Parliament are not in green, but
     their status as government whip is identified in the "further information" section of the info box.<br/><br/>
     For seats in which by-elections took place during the 2015 Parliament, the number in the information box is the total of both MPs' debates participated in, but
@@ -28,19 +28,19 @@
     <b>Do not take this as an indicator of MP's overall activity - MPs do much more than debate in the chamber.</b><br/><br/>
     The Northern Ireland element of this map is still under construction - sorry!</p>
   </div>
- <div id="right column"> 
+ <div id="right column">
 <script src="https://d3js.org/d3.v3.min.js"></script>
-  <script src="//d3js.org/queue.v1.min.js"></script>
+  <script src="https://d3js.org/queue.v1.min.js"></script>
 <script src="https://d3js.org/topojson.v1.min.js"></script>
 <script>
 //Map dimensions (in pixels)
 var width = "400",
     height = "600";
-	
+
   var color = d3.scale.ordinal()
    .domain(["Lab","Con","SNP","PC","LD","DUP","SF","Green","Spk","Ind"])
     .range(["#f2f0f7", "#dadaeb", "#bcbddc", "#9e9ac8", "#756bb1", "#54278f", "#220c3f", "#100026", "#220c3f", "#100026"]);
-  
+
 //Map projection
 var projection = d3.geo.mercator()
     .scale(3311.0206981505453)
@@ -67,19 +67,40 @@ var tooltip = d3.select("body").append("div").attr("class","tooltip");
 /*d3.json("topojsonwpc.json",function(error,geodata) {
   if (error) return console.log(error); //unknown error, check the console*/
   queue()
-    .defer(d3.json, "output-topo.json")
-    .defer(d3.csv, "HoC-GE2017-constituency-results.csv")
+    .defer(d3.json, "https://raw.githubusercontent.com/Mognar/ge2017alternates/master/output-topo.json")
+    .defer(d3.csv, "https://raw.githubusercontent.com/Mognar/ge2017alternates/master/HoC-GE2017-constituency-results.csv")
     .await(ready);
-  
-  
+
+
   function ready(error, topojsonwpc, mpgeo) {
   if (error) throw error;
-    
+
     var concolor = {}
     var conname = {}
+		var conwinner = {}
+		var lab = {}
+		var tory = {}
+		var kipper = {}
   mpgeo.forEach(function(d) { concolor[d.id] = d.first_party;
-			    conname[d.id] = d.constituency_name;});
-    
+			    conname[d.id] = d.constituency_name;
+					kipper[d.id] = d.ukip;
+					tory[d.id] = d.con;
+					lab[d.id] = d.lab;
+				//conwinner[d.id] = Math.max(d.lab, d.con, d.ld, d.ukip);
+				var values = {lab:lab[d.id],con:tory[d.id],ukip:kipper[d.id]}
+				function getKeysWithHighestValue(o, n){
+					var keys = Object.keys(o);
+					keys.sort(function(a,b){
+						return o[b] - o[a];
+					})
+					console.log(keys);
+					return keys.slice(0,n);
+				}
+
+				console.log(getKeysWithHighestValue(values, 1))
+
+				});
+
   //Create a path for each map feature in the data
   features.selectAll("path")
     .data(topojson.feature(topojsonwpc,topojsonwpc.objects.mergedlayers).features)//generate features from TopoJSON
@@ -91,8 +112,8 @@ var tooltip = d3.select("body").append("div").attr("class","tooltip");
     .on("mouseout",hideTooltip)
     .on("click",clicked)
     .style("fill", function(d) { return color(concolor[d.id]);
-	});			
-    
+	});
+
     //Position of the tooltip relative to the cursor
 var tooltipOffset = {x: 5, y: -25};
 //Create a tooltip, hidden at the start
@@ -110,7 +131,7 @@ function moveTooltip() {
 function hideTooltip() {
   tooltip.style("display","none");
 }
-    
+
   }
 // Add optional onClick events for features here
 // d.properties contains the attributes (e.g. d.properties.name, d.properties.population)
@@ -139,5 +160,5 @@ function hideTooltip() {
   tooltip.style("display","none");
 }*/
 </script>
-	</div>  
+	</div>
 </html>
